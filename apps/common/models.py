@@ -28,7 +28,7 @@ class School(BaseModel):
     director = models.ForeignKey(User,
                                     on_delete=models.PROTECT,
                                     verbose_name='Director',
-                                    related_name='school_director',
+                                    related_name='schools',
                                     )
     adress = models.CharField(max_length=300)
 
@@ -69,9 +69,10 @@ class Group(BaseModel):
                                   verbose_name='Group name')
     pupils_count = models.IntegerField(default=0)
     teacher = models.ForeignKey("Teacher",
+                                related_name='groups',
                                 on_delete=models.PROTECT,
                                 verbose_name='Teacher',
-                                related_name='groups'
+                               
                                )
     
     def __str__(self) -> str:
@@ -83,10 +84,7 @@ class Teacher(BaseModel):
     phone_number = models.CharField(max_length=13,
                                     validators=[PHONE_NUMBER_VALIDATOR],
                                     verbose_name='Phone number')
-    group = models.ForeignKey(Group, 
-                              verbose_name='Class Group',
-                              related_name='teachers',
-                              on_delete=models.PROTECT)
+    group = models.ForeignKey(Group,on_delete=models.PROTECT,related_name='Teacher')
     school = models.ForeignKey(School, 
                               verbose_name='School',
                               related_name='teachers',
