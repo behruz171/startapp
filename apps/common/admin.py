@@ -1,3 +1,8 @@
 from django.contrib import admin
+from apps.common.models import *
 
-# Register your models here.
+admin.site.register(Position)
+admin.site.register(School)
+admin.site.register(Pupil)
+admin.site.register(Group)
+admin.site.register(ClassRoom)

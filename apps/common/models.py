@@ -3,9 +3,9 @@ from django.core.validators import RegexValidator
 from django.db import models
 from apps.users.models import User
 
-PHONE_NUMBER_VALIDATOR = RegexValidator(regex=r"^/+998/d{9}$",message="Invalid phone number")
+PHONE_NUMBER_VALIDATOR = RegexValidator(regex=r"^\+998\d{9}$",message="Invalid phone number")
  
- 
+
 
 
 class BaseModel(models.Model):
@@ -14,6 +14,10 @@ class BaseModel(models.Model):
 
     class Meta:
         abstract = True
+
+
+
+
 
 class Position(BaseModel):
     subject_name = models.CharField(max_length=250,
@@ -25,11 +29,11 @@ class Position(BaseModel):
     
 class School(BaseModel):
     school_name = models.CharField(max_length=250)
-    director = models.ForeignKey(User,
+    director = models.ForeignKey('users.User',
                                     on_delete=models.PROTECT,
                                     verbose_name='Director',
                                     related_name='school_director',
-                                    )
+                                )
     adress = models.CharField(max_length=300)
 
 
@@ -68,41 +72,10 @@ class Group(BaseModel):
     group_name = models.CharField(max_length=250,
                                   verbose_name='Group name')
     pupils_count = models.IntegerField(default=0)
-    teacher = models.ForeignKey("Teacher",
-                                on_delete=models.PROTECT,
-                                verbose_name='Teacher',
-                                related_name='groups'
-                               )
+    teacher = models.ForeignKey(User, on_delete=models.CASCADE, related_name='teacher_groups')
     
     def __str__(self) -> str:
         return self.group_name
-    
-class Teacher(BaseModel):
-    full_name = models.CharField(max_length=250,
-                                 verbose_name='Full name')
-    phone_number = models.CharField(max_length=13,
-                                    validators=[PHONE_NUMBER_VALIDATOR],
-                                    verbose_name='Phone number')
-    group = models.ForeignKey(Group, 
-                              verbose_name='Class Group',
-                              related_name='teachers',
-                              on_delete=models.PROTECT)
-    school = models.ForeignKey(School, 
-                              verbose_name='School',
-                              related_name='teachers',
-                              on_delete=models.PROTECT)
-    experience = models.IntegerField(default =0,
-                                     verbose_name='Experience')
-    position = models.ForeignKey(Position,
-                                 on_delete=models.PROTECT,
-                                 verbose_name='Position',
-                                 related_name='teachers'
-                                 )
-    birthday = models.DateField()
-
-
-    def __str__(self) -> str:
-        return self.full_name
     
 
 class ClassRoom(BaseModel):
@@ -120,3 +93,13 @@ class ClassRoom(BaseModel):
     def __str__(self) -> str:
         return self.class_name
     
+
+
+class UserSchool(BaseModel):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_schools')
+    school = models.ForeignKey(School, on_delete=models.CASCADE, related_name='userschools')
+
+
+class UserPosition(BaseModel):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_positions')
+    position = models.ForeignKey(Position, on_delete=models.CASCADE, related_name='userpositions')
