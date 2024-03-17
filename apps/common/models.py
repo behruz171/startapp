@@ -34,6 +34,8 @@ class School(BaseModel):
                                     verbose_name='Director',
                                     related_name='school_director',
                                 )
+
+
     adress = models.CharField(max_length=300)
 
 
@@ -73,9 +75,35 @@ class Group(BaseModel):
                                   verbose_name='Group name')
     pupils_count = models.IntegerField(default=0)
     teacher = models.ForeignKey(User, on_delete=models.CASCADE, related_name='teacher_groups')
+
     
     def __str__(self) -> str:
         return self.group_name
+    
+
+# class Teacher(BaseModel):
+#     full_name = models.CharField(max_length=250,
+#                                  verbose_name='Full name')
+#     phone_number = models.CharField(max_length=13,
+#                                     validators=[PHONE_NUMBER_VALIDATOR],
+#                                     verbose_name='Phone number')
+#     group = models.ForeignKey(Group,on_delete=models.PROTECT,related_name='Teacher')
+#     school = models.ForeignKey(School, 
+#                               verbose_name='School',
+#                               related_name='teachers',
+#                               on_delete=models.PROTECT)
+#     experience = models.IntegerField(default =0,
+#                                      verbose_name='Experience')
+#     position = models.ForeignKey(Position,
+#                                  on_delete=models.PROTECT,
+#                                  verbose_name='Position',
+#                                  related_name='teachers'
+#                                  )
+#     birthday = models.DateField()
+
+
+#     def __str__(self) -> str:
+#         return self.full_name
     
 
 class ClassRoom(BaseModel):
